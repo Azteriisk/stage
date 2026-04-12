@@ -1,3 +1,5 @@
+![Interface](./interface.png)
+
 # stage
 
 stage is a browser-based live-coding environment that combines shader performance and music performance in a single workstation. The app is inspired by ShaderToy and Strudel, but the actual product is the link between them: a central binding layer that lets exported values from the music runtime drive the shader runtime, and eventually allows controlled feedback in the other direction.
