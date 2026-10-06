@@ -92,33 +92,18 @@ export function useStrudelClock({ pattern }: StrudelClockOptions) {
       }
     };
 
-    void syncCps();
-    void updateExports();
-    const runExportUpdate = () => {
-      if (!needsAnalysis) {
-        void updateExports();
-        return;
-      }
-
-      if ("requestIdleCallback" in window && typeof window.requestIdleCallback === "function") {
-        window.requestIdleCallback(() => {
-          void updateExports();
-        }, { timeout: 120 });
-        return;
-      }
-
-      void updateExports();
-    };
-
-    const exportIntervalId = window.setInterval(runExportUpdate, needsAnalysis ? 200 : 125);
-    const cpsIntervalId = window.setInterval(() => {
+    let rafId: number;
+    const rafLoop = () => {
+      if (cancelled) return;
       void syncCps();
-    }, 250);
+      void updateExports();
+      rafId = requestAnimationFrame(rafLoop);
+    };
+    rafId = requestAnimationFrame(rafLoop);
 
     return () => {
       cancelled = true;
-      window.clearInterval(exportIntervalId);
-      window.clearInterval(cpsIntervalId);
+      cancelAnimationFrame(rafId);
     };
   }, [needsAnalysis, pattern, playing, setMusicExports]);
 }
