@@ -1,0 +1,1 @@
+Good catch, thank you for the detailed report! The `setInterval` and `requestIdleCallback` hybrid has been replaced with a native `requestAnimationFrame` loop in https://github.com/Azteriisk/stage/commit/e304586. This ensures proper phase alignment with the Web Audio time and matches strudel.cc's internal loop.

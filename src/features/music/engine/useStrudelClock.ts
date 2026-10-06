@@ -95,15 +95,19 @@ export function useStrudelClock({ pattern }: StrudelClockOptions) {
     let rafId: number;
     const rafLoop = () => {
       if (cancelled) return;
-      void syncCps();
       void updateExports();
       rafId = requestAnimationFrame(rafLoop);
     };
     rafId = requestAnimationFrame(rafLoop);
 
+    const cpsIntervalId = window.setInterval(() => {
+      void syncCps();
+    }, 250);
+
     return () => {
       cancelled = true;
       cancelAnimationFrame(rafId);
+      window.clearInterval(cpsIntervalId);
     };
   }, [needsAnalysis, pattern, playing, setMusicExports]);
 }
